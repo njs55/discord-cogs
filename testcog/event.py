@@ -17,6 +17,10 @@ class EventMixin(MixinMeta):
         if message.author.bot:
             return
 
+        config: dict = await self.config.all_channels()
+        if message.channel.id not in config:
+            return
+
         if not config[message.channel.id]["enabled"]:
             return
 
