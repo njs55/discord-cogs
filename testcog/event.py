@@ -19,8 +19,10 @@ class EventMixin(MixinMeta):
 
         msg: str = message.content.lower()
 
-        cleanedMsg = re.sub(r'[^A-Za-z0-9]+', '', msg)
+        if 'tits' in msg.split(' '):
+            return
 
+        cleanedMsg = re.sub(r'[^A-Za-z0-9]+', '', msg)
         if 'tits' in cleanedMsg:           
             embed = discord.Embed()
             embed=discord.Embed(title="Accidental Bobs?", description=msg, color=0x0b1bf4)
