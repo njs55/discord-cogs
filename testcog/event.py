@@ -17,6 +17,9 @@ class EventMixin(MixinMeta):
         if message.author.bot:
             return
 
+        if not config[message.channel.id]["enabled"]:
+            return
+
         msg: str = message.content.lower()
 
         if 'tits' in msg.split(' '):
@@ -24,10 +27,20 @@ class EventMixin(MixinMeta):
 
         # cleanedMsg = re.sub(r'[^A-Za-z0-9]+', '', msg)
         cleanedMsg = ''.join(char for char in msg if char.isalnum())
-        if 'tits' in cleanedMsg:           
-            embed = discord.Embed()
-            embed=discord.Embed(title="Accidental Bobs?", description=msg, color=0x0b1bf4)
-            await message.reply(embed=embed)
+        
+        if 'tits' in cleanedMsg:      
+            if datetime.utcnow().timestamp() >= config[message.channel.id]["next_react_time"] and random.randint(1, 100) <= config[message.channel.id]["multiplier"]:
+                embed = discord.Embed()
+                embed=discord.Embed(title="Accidental Bobs?", description=msg, color=0x0b1bf4)
+                await message.reply(embed=embed) 
+
+                new_time: datetime = datetime.utcnow() + timedelta(minutes=random.randint(1, config[message.channel.id]["frequency"]))
+                await self.config.channel(message.channel).set_raw("next_react_time", value=new_time.timestamp())
+                
+                
+                
+                
+            
 
         
 
@@ -39,8 +52,7 @@ class EventMixin(MixinMeta):
         # if message.channel.id not in config:
         #     return
 
-        # if not config[message.channel.id]["enabled"]:
-        #     return
+        
 
         # guild_conf: dict = await self.config.guild(message.guild).get_raw()
         # extensions: list = guild_conf["extensions"]

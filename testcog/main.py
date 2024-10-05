@@ -6,8 +6,8 @@ if TYPE_CHECKING:
     from redbot.core.bot import Red
 
 import emojis
-
 import discord
+
 from redbot.core import Config, commands
 
 from .event import EventMixin
@@ -21,20 +21,54 @@ class TestCog(EventMixin, commands.Cog, metaclass=CompositeClass):
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
-        self.config: Config = Config.get_conf(self, identifier=2091831, force_registration=True)
+        self.config: Config = Config.get_conf(self, identifier=2091888, force_registration=True) #identifier=2091831
         default_channel: Dict[str, Any] = {
             "enabled": False,
-            "emojis": ["\U0001F44D", "\U0001F44E"],
             "frequency": 1,
             "next_react_time": 0.0,
             "multiplier": 5,
         }
-        default_guild: Dict[str, List[str]] = {
-            "websites": [],
-            "extensions": [],
-        }
+        # default_guild: Dict[str, List[str]] = {
+        #     "websites": [],
+        #     "extensions": [],
+        # }
         self.config.register_channel(**default_channel)
-        self.config.register_guild(**default_guild)
+        # self.config.register_guild(**default_guild)
+
+
+    @commands.group()
+    @commands.mod_or_permissions()
+    @commands.guild_only()
+    async def bobadmin(self, ctx: commands.Context) -> None:
+        """Gets the admin commands for accidental bobs cog."""
+        pass
+    
+    @bobadmin.command()
+    async def frequency(self, ctx: commands.Context, frequency: int) -> None:
+        """Change the accidental bobs frequency (in hours) for the current channel."""
+        if frequency <= 0:
+            await ctx.send("Value must be above 0!")
+            return
+
+        await self.config.channel(ctx.channel).set_raw("frequency", value=frequency)
+        await ctx.tick()
+
+    @bobadmin.command()
+    async def enable(self, ctx: commands.Context, true_or_false: bool) -> None:
+        """Enable / Disable the bobs system."""
+        await self.config.channel(ctx.channel).set_raw("enabled", value=true_or_false)
+        await ctx.tick()
+
+    @bobadmin.command()
+    async def multiplier(self, ctx: commands.Context, number: int) -> None:
+        """Change the multiplier to change the chance a message can be reacted to from the bot."""
+        if number <= 0:
+            await ctx.send("Please set a number higher than zero!")
+            return
+            
+        await self.config.channel(ctx.channel).set_raw("multiplier", value=number)
+        await ctx.tick()
+
 
     # @commands.group(name="list")
     # @commands.guild_only()
@@ -73,40 +107,7 @@ class TestCog(EventMixin, commands.Cog, metaclass=CompositeClass):
     #             if not (emoji := self.bot.get_emoji(emoji)):
     #                 continue
     #         emoji_list.append(str(emoji))
-    #     await ctx.send(", ".join(emoji_list))
-
-    # @commands.group()
-    # @commands.mod_or_permissions()
-    # @commands.guild_only()
-    # async def emojiadmin(self, ctx: commands.Context) -> None:
-    #     """Gets the admin commands for react emojis cog."""
-    #     pass
-    
-    # @emojiadmin.command()
-    # async def frequency(self, ctx: commands.Context, frequency: int) -> None:
-    #     """Change the reacting frequency for the current channel."""
-    #     if frequency <= 0:
-    #         await ctx.send("Value must be above 0!")
-    #         return
-
-    #     await self.config.channel(ctx.channel).set_raw("frequency", value=frequency)
-    #     await ctx.tick()
-
-    # @emojiadmin.command()
-    # async def enable(self, ctx: commands.Context, true_or_false: bool) -> None:
-    #     """Enable / Disable the reaction system."""
-    #     await self.config.channel(ctx.channel).set_raw("enabled", value=true_or_false)
-    #     await ctx.tick()
-
-    # @emojiadmin.command()
-    # async def multiplier(self, ctx: commands.Context, number: int) -> None:
-    #     """Change the multiplier to change the chance a message can be reacted to from the bot."""
-    #     if number <= 0:
-    #         await ctx.send("Please set a number higher than zero!")
-    #         return
-            
-    #     await self.config.channel(ctx.channel).set_raw("multiplier", value=number)
-    #     await ctx.tick()
+    #     await ctx.send(", ".join(emoji_list))    
     
     # @emojiadmin.group()
     # async def site(self, ctx: commands.Context) -> None:
