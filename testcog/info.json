@@ -1,0 +1,10 @@
+{
+    "author" : ["BiCuriousGeorge#8804"],
+    "install_msg" : "",
+    "name" : "ReactEmojis",
+    "short" : "Randomly reacts to a message sent by an user.",
+    "description" : "This cog randomly reacts to a message sent by an user with various settings.",
+    "tags" : ["fun"],
+    "requirements" : ["emojis"],
+    "hidden" : false
+}
