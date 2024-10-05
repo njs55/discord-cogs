@@ -17,7 +17,7 @@ class CompositeClass(commands.CogMeta, ABCMeta):
     pass
 
 class TestCog(EventMixin, commands.Cog, metaclass=CompositeClass):
-    """React Emojis."""
+    """Test Cog"""
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
