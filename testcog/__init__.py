@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from redbot.core.bot import Red
 
-from .main import ReactEmoji
+from .main import TestCog
 
 async def setup(bot: Red):
-    await bot.add_cog(ReactEmoji(bot))
+    await bot.add_cog(TestCog(bot))
