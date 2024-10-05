@@ -3,6 +3,7 @@ from .abc import MixinMeta
     
 import random
 import discord
+import re
 
 from datetime import datetime, timedelta
 
@@ -17,11 +18,15 @@ class EventMixin(MixinMeta):
             return
 
         msg: str = message.content.lower()
-        
-        embed = discord.Embed()
-        embed=discord.Embed(title="Mocking You", description=msg, color=0x0b1bf4)  
 
-        await message.reply(embed=embed)
+        cleanedMsg = re.sub(r'[^A-Za-z0-9]+', '', msg)
+
+        if 'tits' in cleanedMsg:           
+            embed = discord.Embed()
+            embed=discord.Embed(title="Accidental Bobs?", description=msg, color=0x0b1bf4)
+            await message.reply(embed=embed)
+
+        
 
         # if message.author.bot:
         #     return
